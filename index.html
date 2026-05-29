@@ -59,8 +59,8 @@
             background-image: url('https://images.pexels.com/photos/56866/rose-red-rose-romance-blossom-56866.jpeg');
             background-size: cover;
             background-position: center;
-            /* IMPORTANT: Start completely withered/dead */
-            filter: grayscale(100%) brightness(20%) sepia(30%) contrast(0.8);
+            /* Start completely withered so image is visible but dead */
+            filter: grayscale(100%) brightness(40%) sepia(40%) contrast(0.7);
             transition: filter 15s ease-in-out;
             z-index: 1;
         }
@@ -84,9 +84,9 @@
             position: absolute;
             bottom: -60px;
             font-size: 24px;
-            opacity: 0.3;
+            opacity: 0.25;
             /* Start completely grayscale and dim */
-            filter: grayscale(100%) brightness(0.4) contrast(0.8);
+            filter: grayscale(100%) brightness(0.5) contrast(0.7);
             transition: filter 15s ease-in-out, opacity 15s ease-in-out, transform 15s ease-in-out;
             animation: floatUp linear infinite;
             will-change: transform;
@@ -100,8 +100,8 @@
 
         @keyframes floatUp {
             0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
-            10% { opacity: 0.3; }
-            90% { opacity: 0.3; }
+            10% { opacity: 0.25; }
+            90% { opacity: 0.25; }
             100% { transform: translateY(-110vh) rotate(360deg) scale(1.2); opacity: 0; }
         }
 
@@ -721,7 +721,7 @@
                         <span class="loading-heart" id="loading-heart">🥀</span>
                         <div class="heart-fill-overlay" id="heart-fill"></div>
                     </div>
-                    <span class="loading-text" id="loading-text">قلبي بيستناكي...</span>
+                    <span class="loading-text" id="loading-text">انتي الي بتلوني حياتي</span>
                 </div>
                 
                 <button id="enter-btn">بحبك يا بسمتي</button>
@@ -843,6 +843,9 @@
     </div>
 
     <script>
+        // FIX: Define mainContent variable
+        const mainContent = document.getElementById('main-content');
+
         // Overlay Background Hearts - Start withered
         const overlayHeartsBg = document.getElementById('overlay-hearts-bg');
         const heartSymbols = ['❤️', '💖', '🌹', '💗', '💕'];
