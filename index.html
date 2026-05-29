@@ -14,6 +14,7 @@
             --soft-peach: #e6b0aa;
             --text-light: #f5e6e8;
             --bg-dark: #2c0a15;
+            --gold: #ffd700;
         }
 
         * {
@@ -28,6 +29,11 @@
             color: var(--text-light);
             overflow-x: hidden;
             min-height: 100vh;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="20" font-size="20">❤️</text></svg>'), auto;
+        }
+
+        @media (pointer: coarse) {
+            body { cursor: auto; }
         }
 
         /* Overlay */
@@ -58,7 +64,6 @@
             z-index: 1;
         }
 
-        /* Overlay Floating Hearts */
         #overlay-hearts-bg {
             position: absolute;
             top: 0;
@@ -82,20 +87,10 @@
         }
 
         @keyframes floatUp {
-            0% {
-                transform: translateY(0) rotate(0deg) scale(0.8);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.35;
-            }
-            90% {
-                opacity: 0.35;
-            }
-            100% {
-                transform: translateY(-110vh) rotate(360deg) scale(1.2);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.35; }
+            90% { opacity: 0.35; }
+            100% { transform: translateY(-110vh) rotate(360deg) scale(1.2); opacity: 0; }
         }
 
         .overlay-content {
@@ -144,21 +139,46 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        .loading-bar-container {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 3px;
-            margin-top: 20px;
-            overflow: hidden;
+        /* Heart Loading */
+        .loading-heart-container {
             display: none;
+            margin-top: 25px;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
-        .loading-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--soft-peach), var(--deep-red));
-            transition: width 3s linear;
+        .loading-heart {
+            font-size: 3rem;
+            filter: grayscale(100%) brightness(0.5);
+            transition: filter 3s ease, transform 3s ease;
+            display: inline-block;
+        }
+
+        .loading-heart-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to top, var(--deep-red), var(--soft-peach));
+            transition: height 3s linear;
+            mix-blend-mode: color;
+            opacity: 0.9;
+            border-radius: 0 0 50% 50%;
+        }
+
+        .heart-wrapper {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+        }
+
+        .loading-text {
+            font-family: 'Amiri', serif;
+            font-size: 1rem;
+            color: var(--soft-peach);
+            opacity: 0.8;
         }
 
         #enter-btn {
@@ -204,6 +224,35 @@
             opacity: 1;
         }
 
+        /* Floating Love Notes */
+        #love-notes-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 998;
+            overflow: hidden;
+        }
+
+        .love-note {
+            position: absolute;
+            font-family: 'Amiri', serif;
+            font-size: 1rem;
+            color: rgba(230, 176, 170, 0.6);
+            white-space: nowrap;
+            animation: floatNote linear forwards;
+            text-shadow: 0 0 10px rgba(192, 57, 43, 0.3);
+        }
+
+        @keyframes floatNote {
+            0% { transform: translateX(0) translateY(100vh) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.7; }
+            85% { opacity: 0.7; }
+            100% { transform: translateX(30px) translateY(-10vh) rotate(10deg); opacity: 0; }
+        }
+
         /* Hearts */
         #hearts-container {
             position: fixed;
@@ -227,6 +276,20 @@
             to { transform: translateY(110vh); opacity: 0; }
         }
 
+        /* Golden Shimmer */
+        .shimmer-text {
+            background: linear-gradient(90deg, var(--soft-peach) 0%, var(--gold) 25%, var(--soft-peach) 50%, var(--gold) 75%, var(--soft-peach) 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
         /* Sections */
         section {
             padding: 70px 20px;
@@ -243,11 +306,12 @@
         .hero-text {
             font-family: 'Amiri', serif;
             font-size: 1.6rem;
-            line-height: 2;
+            line-height: 2.2;
             color: var(--soft-peach);
             max-width: 700px;
             margin: 0 auto 40px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            min-height: 120px;
         }
 
         .hero-image-container {
@@ -278,6 +342,50 @@
 
         .hero-image-container:hover img {
             transform: scale(1.05);
+        }
+
+        /* Poetry Section */
+        #poetry {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .poetry-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(230, 176, 170, 0.2);
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poetry-box::before {
+            content: '❝';
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 4rem;
+            color: rgba(192, 57, 43, 0.2);
+            font-family: serif;
+        }
+
+        .poetry-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.4rem;
+            line-height: 2;
+            color: var(--soft-peach);
+            min-height: 80px;
+            transition: opacity 1s ease;
+        }
+
+        .poetry-singer {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            color: var(--deep-red);
+            margin-top: 15px;
+            opacity: 0.8;
         }
 
         /* Timeline */
@@ -312,12 +420,52 @@
             margin-bottom: 15px;
         }
 
-        .timeline-img {
-            width: 100%;
+        .timeline-img-wrapper {
+            position: relative;
             max-width: 350px;
             border-radius: 12px;
+            overflow: hidden;
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-img-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 60px rgba(0,0,0,0.5);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        .timeline-img {
+            width: 100%;
             display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .timeline-img-wrapper:hover .timeline-img {
+            transform: scale(1.08);
+        }
+
+        .secret-message {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(44, 10, 21, 0.95), transparent);
+            padding: 30px 15px 15px;
+            font-family: 'Amiri', serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .timeline-img-wrapper.show-secret .secret-message {
+            opacity: 1;
         }
 
         /* Countdown */
@@ -514,18 +662,21 @@
             .timeline { margin-right: 10px; padding-right: 20px; }
             .glass-box { padding: 30px 20px; }
             .chart-box { height: 300px; }
+            .poetry-text { font-size: 1.15rem; }
         }
 
         @media (max-width: 480px) {
             .hero-text { font-size: 1.1rem; }
             .timeline-item h3 { font-size: 1.15rem; }
             .cta-text { font-size: 1.2rem; }
+            .poetry-text { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
 
     <div id="hearts-container"></div>
+    <div id="love-notes-container"></div>
 
     <div id="overlay">
         <div class="overlay-bg"></div>
@@ -534,9 +685,15 @@
             <div class="glass-box">
                 <label for="magic-input">اكتبي بحبك يا بسمة</label>
                 <input type="text" id="magic-input" autocomplete="off" dir="rtl">
-                <div class="loading-bar-container" id="loading-container">
-                    <div class="loading-bar" id="loading-bar"></div>
+                
+                <div class="loading-heart-container" id="loading-container">
+                    <div class="heart-wrapper">
+                        <span class="loading-heart" id="loading-heart">🥀</span>
+                        <div class="loading-heart-fill" id="heart-fill"></div>
+                    </div>
+                    <span class="loading-text">قلبي بيستناكي...</span>
                 </div>
+                
                 <button id="enter-btn">بحبك يا بسمتي</button>
             </div>
         </div>
@@ -544,11 +701,16 @@
 
     <div id="main-content">
         <section id="hero">
-            <p class="hero-text">
-                حقك عليا يا بسمتي، متزعليش مني... أنا بحبك وبموت فيكي، وإنتي عارفة غلاوتك عندي إيه.
-            </p>
+            <p class="hero-text shimmer-text" id="typewriter-text"></p>
             <div class="hero-image-container">
                 <img src="https://raw.githubusercontent.com/AdhamAyman209/basmety/main/photos/jpg3.jpeg" alt="Basma">
+            </div>
+        </section>
+
+        <section id="poetry">
+            <div class="poetry-box">
+                <p class="poetry-text" id="poetry-text"></p>
+                <p class="poetry-singer" id="poetry-singer"></p>
             </div>
         </section>
 
@@ -556,11 +718,17 @@
             <div class="timeline">
                 <div class="timeline-item">
                     <h3>يوم الدهب كنتي أحلى من القمر</h3>
-                    <img src="https://raw.githubusercontent.com/AdhamAyman209/basmety/main/photos/jpg1.jpeg" alt="Memory 1" class="timeline-img">
+                    <div class="timeline-img-wrapper" data-secret="دي اللحظة اللي قلبي وقف فيها">
+                        <img src="https://raw.githubusercontent.com/AdhamAyman209/basmety/main/photos/jpg1.jpeg" alt="Memory 1" class="timeline-img">
+                        <div class="secret-message">اضغطي مطولاً على الصورة لرسالة سرية</div>
+                    </div>
                 </div>
                 <div class="timeline-item">
-                    <h3>والله ما عارف هنروح فين تاني يا قمري</h3>
-                    <img src="https://raw.githubusercontent.com/AdhamAyman209/basmety/main/photos/jpg6.jpeg" alt="Memory 2" class="timeline-img">
+                    <h3>هتباهى بيكي قدام الدنيا، يا أجمل بسمة في الحفلة</h3>
+                    <div class="timeline-img-wrapper" data-secret="كل عين في القاعة كانت عليكي، وقلبي كان معاهم">
+                        <img src="https://raw.githubusercontent.com/AdhamAyman209/basmety/main/photos/jpg6.jpeg" alt="Memory 2" class="timeline-img">
+                        <div class="secret-message">اضغطي مطولاً على الصورة لرسالة سرية</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -645,7 +813,7 @@
     </div>
 
     <script>
-        // Overlay Background Hearts (Grayscale initially)
+        // Overlay Background Hearts
         const overlayHeartsBg = document.getElementById('overlay-hearts-bg');
         const heartSymbols = ['❤️', '💖', '🌹', '💗', '💕'];
 
@@ -661,35 +829,30 @@
             overlayHeartsBg.appendChild(heart);
         }
 
-        // Create initial batch of hearts
-        for (let i = 0; i < 25; i++) {
-            createOverlayHeart();
-        }
-
-        // Keep adding hearts periodically
+        for (let i = 0; i < 25; i++) createOverlayHeart();
         setInterval(createOverlayHeart, 2000);
 
         // Overlay Logic
         const magicInput = document.getElementById('magic-input');
         const loadingContainer = document.getElementById('loading-container');
-        const loadingBar = document.getElementById('loading-bar');
+        const loadingHeart = document.getElementById('loading-heart');
+        const heartFill = document.getElementById('heart-fill');
         const enterBtn = document.getElementById('enter-btn');
         const overlay = document.getElementById('overlay');
         const overlayBg = document.querySelector('.overlay-bg');
-        const mainContent = document.getElementById('main-content');
 
         magicInput.addEventListener('input', function() {
             if (this.value === 'بحبك يا بسمة') {
                 this.disabled = true;
-                loadingContainer.style.display = 'block';
-                // Force reflow
-                void loadingBar.offsetWidth;
-                loadingBar.style.width = '100%';
+                loadingContainer.style.display = 'flex';
+                loadingHeart.innerText = '🌹';
                 
-                // Restore roses to vibrant colors
+                setTimeout(() => {
+                    heartFill.style.height = '100%';
+                }, 100);
+                
                 overlayBg.style.filter = 'grayscale(0%) brightness(100%) sepia(0%)';
                 
-                // Transform hearts from grayscale to vibrant colors
                 const hearts = document.querySelectorAll('.overlay-heart');
                 hearts.forEach(h => {
                     h.style.filter = 'grayscale(0%) brightness(100%)';
@@ -714,15 +877,16 @@
                 mainContent.style.display = 'block';
                 setTimeout(() => mainContent.classList.add('active'), 50);
                 startHearts();
+                startLoveNotes();
                 initCharts();
+                startTypewriter();
+                startPoetry();
             }, 1000);
         });
 
-        // Hearts Animation (Main Site)
+        // Hearts Animation
         function startHearts() {
-            setInterval(() => {
-                createHeart();
-            }, 250);
+            setInterval(() => createHeart(), 250);
         }
 
         function createHeart() {
@@ -738,16 +902,115 @@
             setTimeout(() => heart.remove(), duration * 1000);
         }
 
+        // Floating Love Notes
+        const loveNotes = [
+            'بحلم بيكي', 'أول ما أفتح عيني', 'قلبي معاكي', 'مش قادر أنساكي',
+            'كل لحظة بفكر فيكي', 'نور عيني', 'روحي اللي سكنتها', 'أجمل حاجة حصلتلي'
+        ];
+
+        function startLoveNotes() {
+            setInterval(() => createLoveNote(), 4000);
+        }
+
+        function createLoveNote() {
+            const note = document.createElement('div');
+            note.className = 'love-note';
+            note.innerText = loveNotes[Math.floor(Math.random() * loveNotes.length)];
+            note.style.left = Math.random() * 80 + 10 + 'vw';
+            note.style.fontSize = (Math.random() * 6 + 12) + 'px';
+            const duration = Math.random() * 10 + 15;
+            note.style.animationDuration = duration + 's';
+            document.getElementById('love-notes-container').appendChild(note);
+            setTimeout(() => note.remove(), duration * 1000);
+        }
+
+        // Typewriter Effect
+        const heroText = 'حقك عليا يا بسمتي، متزعليش مني... أنا بحبك وبموت فيكي، وإنتي عارفة غلاوتك عندي إيه.';
+        let typeIndex = 0;
+
+        function startTypewriter() {
+            const el = document.getElementById('typewriter-text');
+            el.innerText = '';
+            function type() {
+                if (typeIndex < heroText.length) {
+                    el.innerText += heroText.charAt(typeIndex);
+                    typeIndex++;
+                    setTimeout(type, 60);
+                }
+            }
+            type();
+        }
+
+        // Poetry / Lyrics Section
+        const poetryLines = [
+            { text: 'أنت عمري اللي ابتدا بنورك سناه', singer: 'أم كلثوم - أنت عمري' },
+            { text: 'أكدب عليك وأقولك إني نسيتك، وأنا ما نسيتك والله ما نسيتك', singer: 'وردة الجزائرية - أكدب عليك' },
+            { text: 'أنا بعشقك وبموت فيك، وعمري ما هعيش غير ليك', singer: 'ميادة الحناوي - أنا بعشقك' },
+            { text: 'حب إيه اللي أنا فيه ده، حب إيه خدني من إيديه', singer: 'أم كلثوم - حب إيه' },
+            { text: 'سقتني الهوى يوماً فأصبحت أهواه، وما أنا إلا كالأسير المذبوح', singer: 'أم كلثوم - الأطلال' },
+            { text: 'أنا ليكي وحدك، وروحي في إيديكي', singer: 'وردة الجزائرية' }
+        ];
+
+        let poetryIndex = 0;
+
+        function startPoetry() {
+            const textEl = document.getElementById('poetry-text');
+            const singerEl = document.getElementById('poetry-singer');
+            
+            function showNext() {
+                textEl.style.opacity = '0';
+                singerEl.style.opacity = '0';
+                
+                setTimeout(() => {
+                    textEl.innerText = poetryLines[poetryIndex].text;
+                    singerEl.innerText = '— ' + poetryLines[poetryIndex].singer;
+                    textEl.style.opacity = '1';
+                    singerEl.style.opacity = '0.8';
+                    
+                    poetryIndex = (poetryIndex + 1) % poetryLines.length;
+                }, 1000);
+            }
+            
+            showNext();
+            setInterval(showNext, 7000);
+        }
+
         // Timeline IntersectionObserver
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         }, { threshold: 0.15 });
 
         document.querySelectorAll('.timeline-item').forEach(item => observer.observe(item));
+
+        // Long Press Secret Messages
+        document.querySelectorAll('.timeline-img-wrapper').forEach(wrapper => {
+            let pressTimer;
+            const secret = wrapper.getAttribute('data-secret');
+            const msgEl = wrapper.querySelector('.secret-message');
+            
+            const startPress = (e) => {
+                e.preventDefault();
+                msgEl.innerText = '...';
+                wrapper.classList.add('show-secret');
+                pressTimer = setTimeout(() => {
+                    msgEl.innerText = secret;
+                    msgEl.style.color = 'var(--gold)';
+                }, 800);
+            };
+            
+            const endPress = () => {
+                clearTimeout(pressTimer);
+                setTimeout(() => wrapper.classList.remove('show-secret'), 2000);
+            };
+            
+            wrapper.addEventListener('mousedown', startPress);
+            wrapper.addEventListener('mouseup', endPress);
+            wrapper.addEventListener('mouseleave', endPress);
+            wrapper.addEventListener('touchstart', startPress);
+            wrapper.addEventListener('touchend', endPress);
+        });
 
         // Countdown Timer
         const targetDate = new Date('2026-12-01T00:00:00').getTime();
@@ -755,13 +1018,11 @@
         function updateCountdown() {
             const now = new Date().getTime();
             const diff = targetDate - now;
-
             if (diff > 0) {
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
                 document.getElementById('days').innerText = String(days).padStart(2, '0');
                 document.getElementById('hours').innerText = String(hours).padStart(2, '0');
                 document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
@@ -809,10 +1070,7 @@
                         }
                     },
                     scales: {
-                        y: {
-                            display: false,
-                            grid: { display: false }
-                        },
+                        y: { display: false, grid: { display: false } },
                         x: {
                             ticks: { color: '#e6b0aa', font: { family: 'Cairo' } },
                             grid: { color: 'rgba(255,255,255,0.05)' }
@@ -855,9 +1113,7 @@
 
         // Flip Cards
         document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', () => {
-                card.classList.toggle('flipped');
-            });
+            card.addEventListener('click', () => card.classList.toggle('flipped'));
         });
 
         // Yes Button
@@ -866,7 +1122,7 @@
                 setTimeout(() => {
                     const heart = document.createElement('div');
                     heart.className = 'heart';
-                    heart.innerText = ['❤️', '💖', '✨'][Math.floor(Math.random() * 3)];
+                    heart.innerText = ['💋', '🌹', '💖', '❤️'][Math.floor(Math.random() * 4)];
                     heart.style.left = Math.random() * 100 + 'vw';
                     heart.style.top = '50vh';
                     heart.style.fontSize = (Math.random() * 25 + 15) + 'px';
@@ -889,10 +1145,8 @@
             const btnRect = noBtn.getBoundingClientRect();
             const maxLeft = containerRect.width - btnRect.width;
             const maxTop = containerRect.height - btnRect.height;
-            const newLeft = Math.random() * maxLeft;
-            const newTop = Math.random() * maxTop;
-            noBtn.style.left = newLeft + 'px';
-            noBtn.style.top = newTop + 'px';
+            noBtn.style.left = Math.random() * maxLeft + 'px';
+            noBtn.style.top = Math.random() * maxTop + 'px';
         }
 
         noBtn.addEventListener('mouseenter', moveNoButton);
