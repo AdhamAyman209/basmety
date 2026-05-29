@@ -235,11 +235,7 @@
             opacity: 0;
             transition: opacity 1.5s ease-in-out;
             position: relative;
-            z-index: 1;
-        }
-
-        #main-content.active {
-            opacity: 1;
+            z-index: 10;
         }
 
         /* Floating Love Notes */
@@ -451,7 +447,6 @@
             -webkit-user-select: none;
         }
 
-        /* Vignette effect */
         .timeline-img-wrapper::after {
             content: '';
             position: absolute;
@@ -718,10 +713,10 @@
                 
                 <div class="loading-heart-container" id="loading-container">
                     <div class="heart-wrapper">
-                        <span class="loading-heart" id="loading-heart">🥀</span>
+                        <span class="loading-heart" id="loading-heart">🌹</span>
                         <div class="heart-fill-overlay" id="heart-fill"></div>
                     </div>
-                    <span class="loading-text" id="loading-text">انتي الي بتلوني حياتي</span>
+                    <span class="loading-text" id="loading-text">انتي الي بتلوني حياتي وبتخلي ليها طعم</span>
                 </div>
                 
                 <button id="enter-btn">بحبك يا بسمتي</button>
@@ -843,10 +838,7 @@
     </div>
 
     <script>
-        // FIX: Define mainContent variable
         const mainContent = document.getElementById('main-content');
-
-        // Overlay Background Hearts - Start withered
         const overlayHeartsBg = document.getElementById('overlay-hearts-bg');
         const heartSymbols = ['❤️', '💖', '🌹', '💗', '💕'];
 
@@ -865,7 +857,6 @@
         for (let i = 0; i < 25; i++) createOverlayHeart();
         setInterval(createOverlayHeart, 2000);
 
-        // Overlay Logic - 15 seconds transition
         const magicInput = document.getElementById('magic-input');
         const loadingContainer = document.getElementById('loading-container');
         const loadingHeart = document.getElementById('loading-heart');
@@ -876,27 +867,23 @@
         const overlayBg = document.getElementById('overlay-bg');
 
         magicInput.addEventListener('input', function() {
-            if (this.value === 'بحبك يا بسمة') {
+            // إضافة trim للتعامل مع أي مسافة زيادة ممكن تتكتب بالغلط
+            if (this.value.trim() === 'بحبك يا بسمة') {
                 this.disabled = true;
                 loadingContainer.style.display = 'flex';
                 loadingHeart.innerText = '🌹';
                 
-                // Start the heart fill animation - 15 seconds
                 setTimeout(() => {
                     heartFill.style.height = '100%';
                 }, 100);
                 
-                // Start background color restoration - 15 seconds
                 overlayBg.classList.add('vibrant');
                 
-                // Transform floating hearts to vibrant - 15 seconds
                 const hearts = document.querySelectorAll('.overlay-heart');
                 hearts.forEach(h => h.classList.add('vibrant'));
                 
-                // Animate the loading heart to vibrant
                 loadingHeart.classList.add('vibrant');
 
-                // Show button after 16 seconds
                 setTimeout(() => {
                     loadingContainer.style.display = 'none';
                     magicInput.style.display = 'none';
@@ -906,22 +893,27 @@
             }
         });
 
-        // Enter Site
+        // حل مشكلة الشاشة الضلمة هنا
         enterBtn.addEventListener('click', () => {
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
                 mainContent.style.display = 'block';
-                setTimeout(() => mainContent.classList.add('active'), 50);
-                startHearts();
-                startLoveNotes();
-                initCharts();
-                startTypewriter();
-                startPoetry();
+                
+                // إجبار المتصفح إنه يقرأ التغيير قبل ما ينفذ الخطوة اللي بعدها
+                void mainContent.offsetWidth; 
+                
+                mainContent.style.opacity = '1';
+                
+                // تشغيل التأثيرات جوه try/catch عشان أي خطأ ميوقفش الباقي
+                try { startHearts(); } catch(e) {}
+                try { startLoveNotes(); } catch(e) {}
+                try { startTypewriter(); } catch(e) {}
+                try { startPoetry(); } catch(e) {}
+                try { initCharts(); } catch(e) {}
             }, 1000);
         });
 
-        // Hearts Animation (Main Site)
         function startHearts() {
             setInterval(() => createHeart(), 250);
         }
@@ -939,7 +931,6 @@
             setTimeout(() => heart.remove(), duration * 1000);
         }
 
-        // Floating Love Notes
         const loveNotes = [
             'بحلم بيكي', 'أول ما أفتح عيني', 'قلبي معاكي', 'مش قادر أنساكي',
             'كل لحظة بفكر فيكي', 'نور عيني', 'روحي اللي سكنتها', 'أجمل حاجة حصلتلي'
@@ -961,7 +952,6 @@
             setTimeout(() => note.remove(), duration * 1000);
         }
 
-        // Typewriter Effect
         const heroText = 'حقك عليا يا بسمتي، متزعليش مني... أنا بحبك وبموت فيكي، وإنتي عارفة غلاوتك عندي إيه.';
         let typeIndex = 0;
 
@@ -978,7 +968,6 @@
             type();
         }
 
-        // Poetry / Lyrics Section
         const poetryLines = [
             { text: 'أنت عمري اللي ابتدا بنورك سناه', singer: 'أم كلثوم - أنت عمري' },
             { text: 'أكدب عليك وأقولك إني نسيتك، وأنا ما نسيتك والله ما نسيتك', singer: 'وردة الجزائرية - أكدب عليك' },
@@ -1012,7 +1001,6 @@
             setInterval(showNext, 7000);
         }
 
-        // Timeline IntersectionObserver
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -1021,7 +1009,6 @@
 
         document.querySelectorAll('.timeline-item').forEach(item => observer.observe(item));
 
-        // Long Press Secret Messages
         document.querySelectorAll('.timeline-img-wrapper').forEach(wrapper => {
             let pressTimer;
             const secret = wrapper.getAttribute('data-secret');
@@ -1049,7 +1036,6 @@
             wrapper.addEventListener('touchend', endPress);
         });
 
-        // Countdown Timer
         const targetDate = new Date('2026-12-01T00:00:00').getTime();
 
         function updateCountdown() {
@@ -1069,7 +1055,6 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Charts
         let chartsInitialized = false;
 
         function initCharts() {
@@ -1148,12 +1133,10 @@
             });
         }
 
-        // Flip Cards
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', () => card.classList.toggle('flipped'));
         });
 
-        // Yes Button
         document.getElementById('yes-btn').addEventListener('click', () => {
             for (let i = 0; i < 60; i++) {
                 setTimeout(() => {
@@ -1173,7 +1156,6 @@
             }, 2000);
         });
 
-        // Runaway No Button
         const noBtn = document.getElementById('no-btn');
         const ctaContainer = document.getElementById('cta-buttons-container');
 
