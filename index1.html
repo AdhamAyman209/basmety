@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لأجمل بسمة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #fff9f9;
+            --primary-pink: #ffb6c1;
+            --soft-peach: #ffdab9;
+            --warm-cream: #fffdd0;
+            --text-dark: #5a464c;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            transition: background-color 1s ease;
+        }
+
+        /* --- Overlay Hook (Withered Flowers) --- */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* صورة ورد عالية الجودة */
+            background: url('https://images.unsplash.com/photo-1559564484-e48b3e040ff4?q=80&w=1500&auto=format&fit=crop') center/cover no-repeat;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* البداية: الورد غامق وميت (أبيض وأسود) */
+            filter: grayscale(100%) brightness(25%) contrast(120%);
+            transition: filter 3.5s ease-in-out, opacity 1s ease-in-out;
+        }
+
+        #login-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 40px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: opacity 1s ease;
+        }
+
+        #login-box label {
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+
+        #password-input {
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: none;
+            font-size: 1.2rem;
+            text-align: center;
+            width: 280px;
+            outline: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        #password-input:focus {
+            transform: scale(1.05);
+        }
+
+        /* شريط التحميل الجديد */
+        .loading-bar-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+            display: none; /* مخفي في البداية */
+        }
+
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--soft-peach), var(--primary-pink));
+            box-shadow: 0 0 10px var(--primary-pink);
+            transition: width 3.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- Main Content --- */
+        #main-content {
+            display: none;
+            opacity: 0;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            transition: opacity 1.5s ease;
+        }
+
+        section {
+            margin-bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- Hero Section --- */
+        .hero-text {
+            font-size: 2.2rem;
+            text-align: center;
+            font-weight: 800;
+            color: var(--primary-pink);
+            margin-bottom: 30px;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 1s 0.5s forwards ease;
+        }
+
+        .hero-image {
+            max-width: 100%;
+            width: 400px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 1s 0.8s forwards ease;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Timeline --- */
+        .timeline-item {
+            width: 100%;
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item img {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 15px;
+            margin-top: 15px;
+        }
+
+        .timeline-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        /* --- Countdown --- */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .time-box {
+            background: var(--primary-pink);
+            color: #fff;
+            padding: 15px;
+            border-radius: 15px;
+            min-width: 70px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .time-box span {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .time-box small {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* --- Chart Section --- */
+        .chart-container {
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .chart-title {
+            font-size: 1.8rem;
+            color: var(--primary-pink);
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        /* --- Flip Cards --- */
+        .cards-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            width: 240px;
+            height: 300px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .flip-card-front {
+            background: linear-gradient(135deg, var(--soft-peach), var(--primary-pink));
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .flip-card-back {
+            background-color: white;
+            color: var(--text-dark);
+            transform: rotateY(180deg);
+            font-size: 1.2rem;
+            font-weight: 600;
+            line-height: 1.6;
+            border: 2px solid var(--primary-pink);
+        }
+
+        /* --- CTA Section --- */
+        .cta-section {
+            text-align: center;
+            position: relative;
+            min-height: 250px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cta-text {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 40px;
+        }
+
+        .buttons-wrapper {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            height: 100px;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+
+        .btn-yes {
+            background-color: #ff477e;
+            color: white;
+            z-index: 10;
+        }
+
+        .btn-yes:active {
+            transform: scale(0.95);
+        }
+
+        .btn-no {
+            background-color: #ccc;
+            color: #333;
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+
+        /* Hearts Animation */
+        .heart {
+            position: fixed;
+            font-size: 2rem;
+            bottom: -50px;
+            z-index: 10000;
+            animation: floatUp 2s linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .hero-text { font-size: 1.8rem; }
+            .flip-card { width: 100%; height: 200px; }
+            #password-input { width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Overlay / Hook (Dead Flowers to Blooming) -->
+    <div id="overlay">
+        <div id="login-box">
+            <label for="password-input">اكتبي بحبك يا بسمة</label>
+            <input type="text" id="password-input" placeholder="اكتبي هنا..." autocomplete="off">
+            <div class="loading-bar-container" id="loading-box">
+                <div class="loading-progress" id="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        
+        <section>
+            <div class="hero-text">يا بسمتي حقك عليا متزعليش مني انا بحبك وبموت فيكي</div>
+            <img src="https://raw.githubusercontent.com/AdhamAyman209/basmety/main/photos/jpg3.jpeg" alt="صورة بسمة وأدهم" class="hero-image">
+        </section>
+
+        <section>
+            <div class="timeline-item">
+                <div class="timeline-text">يوم الدهب كنتي احلي من القمر</div>
+                <img src="https://raw.githubusercontent.com/AdhamAyman209/basmety/main/photos/jpg1.jpeg" alt="يوم الذهب">
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-text">هتباهى بيكي قدام الدنيا، يا أجمل "بسمة" في الحفلة</div>
+                <img src="https://raw.githubusercontent.com/AdhamAyman209/basmety/main/photos/jpg6.jpeg" alt="بسمة في الحفلة">
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-text">باقي على كتب كتابنا...</div>
+                <div class="countdown-container">
+                    <div class="time-box"><span id="days">00</span><small>يوم</small></div>
+                    <div class="time-box"><span id="hours">00</span><small>ساعة</small></div>
+                    <div class="time-box"><span id="mins">00</span><small>دقيقة</small></div>
+                    <div class="time-box"><span id="secs">00</span><small>ثانية</small></div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="chart-container timeline-item">
+                <div class="chart-title">مكونات يومي</div>
+                <canvas id="myChart"></canvas>
+            </div>
+        </section>
+
+        <section>
+            <div class="cards-container">
+                <div class="flip-card timeline-item" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">اضغطي لفتح الوعد الأول</div>
+                        <div class="flip-card-back">أوعدك أفضل أحرس 'بسمة' قلبك وعيونك، وتكوني دايماً ملكة بيتنا اللي بنبنيه سوا.</div>
+                    </div>
+                </div>
+                <div class="flip-card timeline-item" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">اضغطي لفتح الوعد الثاني</div>
+                        <div class="flip-card-back">أوعدك أكون سكنك وأمانك، نقسم الأيام سوا، وأفضل دايماً ظهرك وسندك في كل خطوة.</div>
+                    </div>
+                </div>
+                <div class="flip-card timeline-item" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">اضغطي لفتح الوعد الثالث</div>
+                        <div class="flip-card-back">أوعدك أفضل أشوفك أجمل رزق في حياتي، وأحبك كل يوم كأني بختارك من أول وجديد.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section timeline-item">
+            <div class="cta-text">ها، أقدر أقول إننا اتصالحنا يا بسمة؟</div>
+            <div class="buttons-wrapper">
+                <button class="btn btn-yes" id="btn-yes">أيوة، مسامحاك 🤍</button>
+                <button class="btn btn-no" id="btn-no">لأ لسه زعلانة 😤</button>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- Hook Logic (Blooming Flowers) ---
+        const passwordInput = document.getElementById('password-input');
+        const overlay = document.getElementById('overlay');
+        const mainContent = document.getElementById('main-content');
+        const loginBox = document.getElementById('login-box');
+        const loadingBox = document.getElementById('loading-box');
+        const loadingProgress = document.getElementById('loading-progress');
+
+        passwordInput.addEventListener('input', function() {
+            if (this.value.trim() === "بحبك يا بسمة") {
+                // منع الكتابة الإضافية
+                this.disabled = true;
+                
+                // إظهار البار
+                loadingBox.style.display = 'block';
+
+                // تشغيل تأثير التحميل وتنويير الورد في نفس اللحظة
+                setTimeout(() => {
+                    loadingProgress.style.width = '100%';
+                    // إعادة الألوان للورد وإلغاء تأثير السواد
+                    overlay.style.filter = "grayscale(0%) brightness(100%) contrast(100%)";
+                }, 50);
+
+                // بعد 3.5 ثواني (لما الورد ينور والبار يتملي)
+                setTimeout(() => {
+                    // إخفاء صندوق الكتابة بشياكة
+                    loginBox.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        // إخفاء الورد وبدء الموقع
+                        overlay.style.opacity = '0';
+                        setTimeout(() => {
+                            overlay.style.display = 'none';
+                            mainContent.style.display = 'block';
+                            setTimeout(() => mainContent.style.opacity = '1', 50);
+                            initChart();
+                        }, 1000);
+                    }, 1000); // إعطاءها لحظة عشان تشوف الورد الملون
+                }, 3500);
+            }
+        });
+
+        // --- Intersection Observer for Scroll Animations ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // --- Countdown Logic ---
+        const targetDate = new Date('August 1, 2026 00:00:00').getTime();
+        
+        setInterval(() => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) return;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('mins').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('secs').innerText = seconds.toString().padStart(2, '0');
+        }, 1000);
+
+        // --- Chart.js Logic ---
+        let chartRendered = false;
+        function initChart() {
+            if (chartRendered) return;
+            chartRendered = true;
+            const ctx = document.getElementById('myChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['تفكير فيكي وفي بيتنا', 'هندسة بيانات وشغل', 'باقي الحياة'],
+                    datasets: [{
+                        data: [99, 0.5, 0.5],
+                        backgroundColor: [
+                            '#ffb6c1', // primary-pink
+                            '#ffdab9', // soft-peach
+                            '#fffdd0'  // warm-cream
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { family: 'Cairo', size: 14 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Runaway Button Logic ---
+        const btnNo = document.getElementById('btn-no');
+        const moveBtn = () => {
+            const wrapper = document.querySelector('.buttons-wrapper');
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const btnRect = btnNo.getBoundingClientRect();
+
+            const maxX = wrapperRect.width - btnRect.width;
+            const maxY = 150; 
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY) - 50; 
+
+            btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+        };
+
+        btnNo.addEventListener('mouseover', moveBtn);
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault(); 
+            moveBtn();
+        });
+
+        // --- Yes Button Logic (Hearts & Redirect) ---
+        document.getElementById('btn-yes').addEventListener('click', () => {
+            // Generate Hearts
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = ['🤍', '💖', '✨'][Math.floor(Math.random() * 3)];
+                    heart.classList.add('heart');
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                    document.body.appendChild(heart);
+                    
+                    // Cleanup DOM
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 50);
+            }
+
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                window.location.href = "https://wa.me/01005678981?text=أنا%20سامحتك%20خلاص";
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
