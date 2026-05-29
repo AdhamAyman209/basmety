@@ -235,7 +235,11 @@
             opacity: 0;
             transition: opacity 1.5s ease-in-out;
             position: relative;
-            z-index: 10;
+            z-index: 1;
+        }
+
+        #main-content.active {
+            opacity: 1;
         }
 
         /* Floating Love Notes */
@@ -447,6 +451,7 @@
             -webkit-user-select: none;
         }
 
+        /* Vignette effect */
         .timeline-img-wrapper::after {
             content: '';
             position: absolute;
@@ -867,8 +872,7 @@
         const overlayBg = document.getElementById('overlay-bg');
 
         magicInput.addEventListener('input', function() {
-            // إضافة trim للتعامل مع أي مسافة زيادة ممكن تتكتب بالغلط
-            if (this.value.trim() === 'بحبك يا بسمة') {
+            if (this.value === 'بحبك يا بسمة') {
                 this.disabled = true;
                 loadingContainer.style.display = 'flex';
                 loadingHeart.innerText = '🌹';
@@ -893,24 +897,24 @@
             }
         });
 
-        // حل مشكلة الشاشة الضلمة هنا
+        // التعديل السحري عشان الشاشة متقفلش ضلمة
         enterBtn.addEventListener('click', () => {
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
                 mainContent.style.display = 'block';
                 
-                // إجبار المتصفح إنه يقرأ التغيير قبل ما ينفذ الخطوة اللي بعدها
+                // إجبار المتصفح على قراءة العنصر قبل إضافة الكلاس عشان الأنيميشن يشتغل
                 void mainContent.offsetWidth; 
                 
-                mainContent.style.opacity = '1';
+                mainContent.classList.add('active');
                 
-                // تشغيل التأثيرات جوه try/catch عشان أي خطأ ميوقفش الباقي
-                try { startHearts(); } catch(e) {}
-                try { startLoveNotes(); } catch(e) {}
-                try { startTypewriter(); } catch(e) {}
-                try { startPoetry(); } catch(e) {}
-                try { initCharts(); } catch(e) {}
+                // تشغيل الوظائف جوا try-catch عشان لو حاجة فيها مشكلة (زي الشارت) متوقفش الباقي
+                try { startHearts(); } catch(e) { console.error(e); }
+                try { startLoveNotes(); } catch(e) { console.error(e); }
+                try { initCharts(); } catch(e) { console.error(e); }
+                try { startTypewriter(); } catch(e) { console.error(e); }
+                try { startPoetry(); } catch(e) { console.error(e); }
             }, 1000);
         });
 
