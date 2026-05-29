@@ -4,18 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لأجمل بسمة</title>
-    <!-- استيراد الخطوط -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-    <!-- مكتبة Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* --- الألوان العنابي والحمراء الفخمة --- */
         :root {
             --bg-color: #fff0f3; 
             --primary-pink: #d90429; 
             --soft-peach: #ffb3c6; 
-            --warm-cream: #ffccd5; 
             --text-dark: #2b2d42; 
             --accent-red: #8d0801; 
             --shadow: 0 8px 20px rgba(141, 8, 1, 0.2);
@@ -33,7 +29,6 @@
             background-color: var(--bg-color);
             color: var(--text-dark);
             overflow-x: hidden;
-            transition: background-color 1s ease;
             scroll-behavior: smooth;
         }
 
@@ -49,41 +44,32 @@
             transition: width 0.1s;
         }
 
-        /* --- خلفية القلوب المتحركة --- */
-        .particles-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.5;
-            display: none; /* هتبان لما الموقع يفتح */
-        }
-
-        /* --- شاشة الدخول (Hook) --- */
+        /* --- شاشة الدخول (الورد الدبلان اللي بينور) --- */
         #overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* استخدمنا تدرج لوني ضلمة كبديل مضمون للورد، وهينور للألوان الزاهية */
-            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            /* صورة ورد أحمر مضمونة 100% */
+            background-color: #111;
+            background-image: url('https://images.unsplash.com/photo-1559564484-e48b3e040ff4?q=80&w=1500&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
             z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: background 3.5s ease-in-out, opacity 1s ease-in-out;
+            /* الفلتر هنا بيخليها أبيض وأسود وضلمة جداً */
+            filter: grayscale(100%) brightness(20%) sepia(30%);
+            transition: filter 3.5s ease-in-out, opacity 1s ease-in-out;
             padding: 20px;
         }
 
-        /* --- الـ Box الخاص بالـ Password (تم حل مشكلة الخروج من الـ Box) --- */
         #login-box {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 40px 20px; /* تقليل الـ Padding للموبايل */
+            background: rgba(0, 0, 0, 0.85);
+            padding: 40px 20px;
             border-radius: 20px;
             backdrop-filter: blur(10px);
             text-align: center;
@@ -93,7 +79,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.9);
             border: 2px solid rgba(255,255,255,0.1);
             width: 100%;
-            max-width: 400px; /* العرض الأقصى للـ Box */
+            max-width: 400px;
             min-height: 250px;
             justify-content: center;
             align-items: center;
@@ -102,13 +88,10 @@
 
         #login-box label {
             color: #fff;
-            font-size: 1.8rem; /* تصغير الخط قليلاً */
+            font-size: 1.8rem;
             font-weight: 900;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
             line-height: 1.3;
-            /* إضافة كسر السطر لو الشاشة صغيرة جداً */
-            word-wrap: break-word;
-            max-width: 100%;
         }
 
         #password-input {
@@ -118,7 +101,7 @@
             font-size: 1.2rem;
             font-weight: 700;
             text-align: center;
-            width: 90%; /* نسبة مئوية بدل عرض ثابت */
+            width: 90%;
             max-width: 300px;
             outline: none;
             background: rgba(255,255,255,0.9);
@@ -175,6 +158,33 @@
             100% { transform: scale(1); }
         }
 
+        /* --- القلوب اللي بتنزل في الخلفية --- */
+        #hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; /* عشان متأثرش على الزراير */
+            z-index: 0; /* ورا المحتوى */
+            overflow: hidden;
+            display: none; /* هتبدأ بعد ما الموقع يفتح */
+        }
+
+        .falling-heart {
+            position: absolute;
+            top: -10vh;
+            animation: fall linear forwards;
+            opacity: 0.7;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
         /* --- Main Content --- */
         #main-content {
             display: none;
@@ -182,6 +192,8 @@
             padding: 60px 20px;
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+            z-index: 10; /* فوق القلوب */
             transition: opacity 1.5s ease;
         }
 
@@ -192,9 +204,9 @@
             align-items: center;
         }
 
-        /* --- Hero Section (رسالة الاعتذار) --- */
+        /* --- Hero Section --- */
         .hero-text {
-            font-family: 'Amiri', serif; /* خط عربي كلاسيكي وأنيق للاعتذار */
+            font-family: 'Amiri', serif;
             font-size: 2.8rem;
             text-align: center;
             font-weight: 700;
@@ -204,7 +216,6 @@
             opacity: 0;
             transform: translateY(30px);
             animation: fadeUp 1.2s 0.5s forwards ease;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.05);
         }
 
         .hero-image-container {
@@ -224,24 +235,11 @@
             z-index: 2;
         }
 
-        /* تصميم خلفي للصورة (Decorative Frame) */
-        .hero-image-container::before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: -15px;
-            width: 100%;
-            height: 100%;
-            border-radius: 20px;
-            background-color: var(--soft-peach);
-            z-index: 1;
-        }
-
         @keyframes fadeUp {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- Timeline (الذكريات) --- */
+        /* --- Timeline --- */
         .timeline-container {
             position: relative;
             width: 100%;
@@ -249,7 +247,6 @@
             margin: 0 auto;
         }
 
-        /* خط في نص الـ Timeline */
         .timeline-container::after {
             content: '';
             position: absolute;
@@ -273,16 +270,10 @@
             transition: var(--transition);
         }
 
-        .timeline-item.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* تصميم يمين وشمال */
+        .timeline-item.visible { opacity: 1; transform: translateY(0); }
         .timeline-item.left { left: 0; }
         .timeline-item.right { left: 50%; }
 
-        /* دوائر على الخط الزمني */
         .timeline-item::after {
             content: '';
             position: absolute;
@@ -299,30 +290,21 @@
 
         .timeline-content {
             padding: 20px;
-            background-color: white;
+            background-color: rgba(255,255,255,0.9);
             position: relative;
             border-radius: 15px;
             box-shadow: var(--shadow);
             border-top: 5px solid var(--accent-red);
         }
 
-        .timeline-content img {
-            width: 100%;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-
-        .timeline-text {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: var(--accent-red);
-        }
+        .timeline-content img { width: 100%; border-radius: 10px; margin-top: 15px; }
+        .timeline-text { font-size: 1.3rem; font-weight: 800; color: var(--accent-red); }
 
         /* --- Countdown --- */
         .countdown-wrapper {
             width: 100%;
             max-width: 600px;
-            background: #fff;
+            background: rgba(255,255,255,0.9);
             padding: 30px;
             border-radius: 20px;
             box-shadow: var(--shadow);
@@ -334,19 +316,8 @@
             transition: var(--transition);
         }
 
-        .countdown-title {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--text-dark);
-            margin-bottom: 20px;
-        }
-
-        .countdown-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+        .countdown-title { font-size: 1.8rem; font-weight: 900; color: var(--text-dark); margin-bottom: 20px; }
+        .countdown-container { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 
         .time-box {
             background: var(--accent-red);
@@ -362,17 +333,11 @@
         .time-box small { font-size: 1rem; font-weight: 700; }
 
         /* --- Charts Section --- */
-        .charts-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 50px;
-            width: 100%;
-            max-width: 700px;
-        }
+        .charts-wrapper { display: flex; flex-direction: column; gap: 50px; width: 100%; max-width: 700px; }
 
         .chart-container {
             width: 100%;
-            background: #fff;
+            background: rgba(255,255,255,0.9);
             padding: 30px 20px;
             border-radius: 25px;
             box-shadow: var(--shadow);
@@ -382,21 +347,10 @@
             transition: var(--transition);
         }
         
-        .chart-title {
-            font-size: 1.8rem;
-            color: var(--accent-red);
-            margin-bottom: 20px;
-            font-weight: 900;
-        }
+        .chart-title { font-size: 1.8rem; color: var(--accent-red); margin-bottom: 20px; font-weight: 900; }
 
         /* --- Flip Cards --- */
-        .cards-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-        }
+        .cards-container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%; }
 
         .flip-card {
             background-color: transparent;
@@ -418,9 +372,7 @@
             transform-style: preserve-3d;
         }
 
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
 
         .flip-card-front, .flip-card-back {
             position: absolute;
@@ -453,7 +405,7 @@
             border: 4px solid var(--accent-red);
         }
 
-        /* --- CTA Section (الزراير) --- */
+        /* --- CTA Section --- */
         .cta-section {
             text-align: center;
             position: relative;
@@ -467,12 +419,7 @@
             transition: var(--transition);
         }
 
-        .cta-text {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: var(--accent-red);
-            margin-bottom: 40px;
-        }
+        .cta-text { font-size: 2.2rem; font-weight: 900; color: var(--accent-red); margin-bottom: 40px; }
 
         .buttons-wrapper {
             position: relative;
@@ -496,64 +443,36 @@
             transition: transform 0.2s;
         }
 
-        .btn-yes {
-            background-color: var(--primary-pink);
-            color: white;
-            z-index: 10;
-        }
-
+        .btn-yes { background-color: var(--primary-pink); color: white; z-index: 10; }
         .btn-yes:active { transform: scale(0.95); }
 
         .btn-no {
             background-color: #555;
             color: #fff;
             position: absolute;
-            transition: left 0.2s ease, top 0.2s ease; /* سرعة هروب عالية */
+            transition: left 0.2s ease, top 0.2s ease;
             z-index: 5;
         }
 
-        /* Hearts Animation */
-        .heart {
-            position: fixed;
-            font-size: 3rem;
-            bottom: -50px;
-            z-index: 10000;
-            animation: floatUp 2s linear forwards;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100vh) scale(1.5) rotate(45deg); opacity: 0; }
-        }
-
-        /* --- Media Queries (للموبايل) --- */
         @media (max-width: 768px) {
             .hero-text { font-size: 2rem; }
             .hero-image { width: 90%; }
-            .hero-image-container::before { display: none; } /* شيلنا الفريم في الموبايل عشان المساحة */
-            
-            /* تظبيط الـ Timeline للموبايل عشان مياخدش مساحة */
             .timeline-container::after { left: 31px; }
             .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
             .timeline-item.right { left: 0%; }
             .timeline-item::after { left: 15px; right: auto; }
             .timeline-item.right::after { left: 15px; }
-            
             .flip-card { width: 100%; max-width: 300px; height: 200px; }
-            
             .buttons-wrapper { flex-direction: column; height: 250px; gap: 30px; }
-            
-            #login-box label { font-size: 1.5rem; }
-            #password-input { font-size: 1rem; padding: 12px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Scroll Progress -->
     <div id="scroll-progress"></div>
 
-    <!-- شاشة البداية -->
+    <div id="hearts-container"></div>
+
     <div id="overlay">
         <div id="login-box">
             <label id="pass-label" for="password-input">اكتبي بحبك يا بسمة</label>
@@ -567,10 +486,8 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div id="main-content">
         
-        <!-- Hero Section -->
         <section>
             <div class="hero-text">"حقك عليا يا بسمتي، متزعليش مني... أنا بحبك وبموت فيكي، وإنتي عارفة غلاوتك عندي إيه."</div>
             <div class="hero-image-container">
@@ -578,7 +495,6 @@
             </div>
         </section>
 
-        <!-- Timeline Section -->
         <section>
             <div class="timeline-container">
                 <div class="timeline-item left scroll-anim">
@@ -596,7 +512,6 @@
             </div>
         </section>
 
-        <!-- Countdown Section -->
         <section>
             <div class="countdown-wrapper scroll-anim">
                 <div class="countdown-title">باقي على فرحتنا وكتب كتابنا...</div>
@@ -609,12 +524,10 @@
             </div>
         </section>
 
-        <!-- Charts Section (Doughnut + Line Chart) -->
         <section>
             <div class="charts-wrapper">
                 <div class="chart-container scroll-anim">
                     <div class="chart-title">معدل حبي لبسمة مع الزمن 📈</div>
-                    <!-- Line Chart الجديد -->
                     <canvas id="lineChart"></canvas>
                 </div>
 
@@ -625,7 +538,6 @@
             </div>
         </section>
 
-        <!-- Promises Section -->
         <section>
             <div class="cards-container">
                 <div class="flip-card scroll-anim" onclick="this.classList.toggle('flipped')">
@@ -649,7 +561,6 @@
             </div>
         </section>
 
-        <!-- CTA Section -->
         <section class="cta-section scroll-anim">
             <div class="cta-text">ها يا بسمتي... أقدر أقول إننا اتصالحنا؟</div>
             <div class="buttons-wrapper">
@@ -661,7 +572,7 @@
     </div>
 
     <script>
-        // --- Scroll Progress Bar ---
+        // --- Scroll Progress ---
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -669,7 +580,7 @@
             document.getElementById('scroll-progress').style.width = scrolled + '%';
         });
 
-        // --- Hook Logic ---
+        // --- كود الوردة اللي بتنور ---
         const passwordInput = document.getElementById('password-input');
         const passLabel = document.getElementById('pass-label');
         const overlay = document.getElementById('overlay');
@@ -678,6 +589,7 @@
         const loadingBox = document.getElementById('loading-box');
         const loadingProgress = document.getElementById('loading-progress');
         const enterBtn = document.getElementById('enter-btn');
+        const heartsContainer = document.getElementById('hearts-container');
 
         passwordInput.addEventListener('input', function() {
             if (this.value.trim() === "بحبك يا بسمة") {
@@ -686,8 +598,8 @@
 
                 setTimeout(() => {
                     loadingProgress.style.width = '100%';
-                    // تغيير الخلفية الضلمة لألوان زاهية (بديل مضمون للورد لو فشل التحميل)
-                    overlay.style.background = 'linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%)';
+                    // إزالة الفلتر تماماً عشان الوردة تنور وترجع ألوانها الطبيعية الزاهية
+                    overlay.style.filter = "grayscale(0%) brightness(100%) sepia(0%)";
                 }, 50);
 
                 setTimeout(() => {
@@ -699,6 +611,23 @@
             }
         });
 
+        // --- تشغيل القلوب المتساقطة ---
+        function startFallingHearts() {
+            heartsContainer.style.display = 'block';
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.innerHTML = ['❤️', '💖', '💕', '✨'][Math.floor(Math.random() * 4)];
+                heart.classList.add('falling-heart');
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 3 + 2 + 's'; // من 2 لـ 5 ثواني
+                heart.style.fontSize = Math.random() * 1.5 + 1 + 'rem';
+                heartsContainer.appendChild(heart);
+                
+                // تنظيف القلوب بعد ما تنزل عشان الموقع ميعلقش
+                setTimeout(() => heart.remove(), 5000);
+            }, 300); // قلب جديد كل جزء من الثانية
+        }
+
         enterBtn.addEventListener('click', () => {
             loginBox.style.opacity = '0';
             setTimeout(() => {
@@ -708,13 +637,14 @@
                     mainContent.style.display = 'block';
                     setTimeout(() => {
                         mainContent.style.opacity = '1';
-                        initCharts(); // تشغيل الـ Charts
+                        initCharts();
+                        startFallingHearts(); // تشغيل القلوب بمجرد الدخول
                     }, 50);
                 }, 800);
             }, 500);
         });
 
-        // --- Scroll Animations Observer ---
+        // --- Animations Observer ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -727,34 +657,28 @@
             observer.observe(item);
         });
 
-        // --- Countdown Logic ---
-        // بما إننا في مايو 2026، هنخلي تاريخ الفرح مثلاً في آخر 2026 زي ما اتذكر في الـ Data بتاعتك
+        // --- Countdown ---
         const targetDate = new Date('December 1, 2026 00:00:00').getTime();
-        
         setInterval(() => {
             const now = new Date().getTime();
             const distance = targetDate - now;
-
             if (distance < 0) return;
-
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
             document.getElementById('days').innerText = days.toString().padStart(2, '0');
             document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
             document.getElementById('mins').innerText = minutes.toString().padStart(2, '0');
             document.getElementById('secs').innerText = seconds.toString().padStart(2, '0');
         }, 1000);
 
-        // --- Charts.js Logic (Line & Pie) ---
+        // --- Charts ---
         let chartsRendered = false;
         function initCharts() {
             if (chartsRendered) return;
             chartsRendered = true;
 
-            // 1. Line Chart (معدل الحب)
             const ctxLine = document.getElementById('lineChart').getContext('2d');
             new Chart(ctxLine, {
                 type: 'line',
@@ -769,20 +693,19 @@
                         pointBackgroundColor: '#8d0801',
                         pointRadius: 6,
                         fill: true,
-                        tension: 0.4 // بيعمل كيرف ناعم للخط
+                        tension: 0.4
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { display: false }, // إخفاء الأرقام عشان هو تعبيري
+                        y: { display: false }, 
                         x: { ticks: { font: { family: 'Cairo', weight: 'bold' } } }
                     }
                 }
             });
 
-            // 2. Pie Chart (مكونات اليوم)
             const ctxPie = document.getElementById('pieChart').getContext('2d');
             new Chart(ctxPie, {
                 type: 'doughnut',
@@ -800,22 +723,19 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: {
-                                font: { family: 'Cairo', size: 14, weight: 'bold' }, color: '#2b2d42'
-                            }
+                            labels: { font: { family: 'Cairo', size: 14, weight: 'bold' }, color: '#2b2d42' }
                         }
                     }
                 }
             });
         }
 
-        // --- Runaway Button Logic (متظبطة للموبايل) ---
+        // --- Runaway Button ---
         const btnNo = document.getElementById('btn-no');
         const wrapper = document.querySelector('.buttons-wrapper');
         let isAbsolute = false;
         
         const moveBtn = () => {
-            // أول لمسة بتخليه Absolute عشان يتحرك براحته
             if (!isAbsolute) {
                 btnNo.style.position = 'absolute';
                 isAbsolute = true;
@@ -825,11 +745,9 @@
             const btnWidth = btnNo.offsetWidth;
             const btnHeight = btnNo.offsetHeight;
 
-            // حساب أقصى مساحة يقدر يتحرك فيها جوه الـ Wrapper بس
             const maxX = wrapperRect.width - btnWidth;
             const maxY = wrapperRect.height - btnHeight;
 
-            // توليد أرقام عشوائية جوه المساحة دي
             const randomX = Math.max(0, Math.floor(Math.random() * maxX));
             const randomY = Math.max(0, Math.floor(Math.random() * maxY));
 
@@ -837,25 +755,22 @@
             btnNo.style.top = randomY + 'px';
         };
 
-        // تفعيل الهروب بالماوس أو اللمس
         btnNo.addEventListener('mouseover', moveBtn);
         btnNo.addEventListener('touchstart', (e) => {
             e.preventDefault(); 
             moveBtn();
         });
 
-        // --- Yes Button Logic (Hearts & Redirect) ---
+        // --- Yes Button ---
         document.getElementById('btn-yes').addEventListener('click', () => {
-            // Generate Hearts
             for (let i = 0; i < 40; i++) {
                 setTimeout(() => {
                     const heart = document.createElement('div');
                     heart.innerHTML = ['❤️', '💖', '💘', '✨'][Math.floor(Math.random() * 4)];
                     heart.classList.add('heart');
                     heart.style.left = Math.random() * 100 + 'vw';
-                    heart.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                    heart.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
                     document.body.appendChild(heart);
-                    
                     setTimeout(() => heart.remove(), 2000);
                 }, i * 40);
             }
