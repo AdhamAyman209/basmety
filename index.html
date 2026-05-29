@@ -331,6 +331,8 @@
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
             min-height: 120px;
             direction: rtl;
+            /* التعديل هنا لمنع لزق المسافات في تأثير الكتابة */
+            white-space: pre-wrap;
         }
 
         .hero-image-container {
@@ -872,21 +874,23 @@
         const overlayBg = document.getElementById('overlay-bg');
 
         magicInput.addEventListener('input', function() {
-            if (this.value === 'بحبك يا بسمة') {
+            if (this.value.trim() === 'بحبك يا بسمة') {
                 this.disabled = true;
                 loadingContainer.style.display = 'flex';
                 loadingHeart.innerText = '🌹';
                 
+                // التعديل هنا: إجبار المتصفح يقرأ إن العنصر ظهر وهو "أبيض وأسود" قبل ما نلونه
+                void loadingContainer.offsetWidth;
+                
                 setTimeout(() => {
                     heartFill.style.height = '100%';
-                }, 100);
-                
-                overlayBg.classList.add('vibrant');
-                
-                const hearts = document.querySelectorAll('.overlay-heart');
-                hearts.forEach(h => h.classList.add('vibrant'));
-                
-                loadingHeart.classList.add('vibrant');
+                    overlayBg.classList.add('vibrant');
+                    
+                    const hearts = document.querySelectorAll('.overlay-heart');
+                    hearts.forEach(h => h.classList.add('vibrant'));
+                    
+                    loadingHeart.classList.add('vibrant');
+                }, 50); // تأخير بسيط 50 جزء من الثانية لضمان الأنيميشن
 
                 setTimeout(() => {
                     loadingContainer.style.display = 'none';
@@ -897,19 +901,16 @@
             }
         });
 
-        // التعديل السحري عشان الشاشة متقفلش ضلمة
         enterBtn.addEventListener('click', () => {
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
                 mainContent.style.display = 'block';
                 
-                // إجبار المتصفح على قراءة العنصر قبل إضافة الكلاس عشان الأنيميشن يشتغل
                 void mainContent.offsetWidth; 
                 
                 mainContent.classList.add('active');
                 
-                // تشغيل الوظائف جوا try-catch عشان لو حاجة فيها مشكلة (زي الشارت) متوقفش الباقي
                 try { startHearts(); } catch(e) { console.error(e); }
                 try { startLoveNotes(); } catch(e) { console.error(e); }
                 try { initCharts(); } catch(e) { console.error(e); }
@@ -961,10 +962,11 @@
 
         function startTypewriter() {
             const el = document.getElementById('typewriter-text');
-            el.innerText = '';
+            // التعديل هنا: استخدام textContent بدل innerText لمنع مسح المسافات
+            el.textContent = '';
             function type() {
                 if (typeIndex < heroText.length) {
-                    el.innerText += heroText.charAt(typeIndex);
+                    el.textContent += heroText.charAt(typeIndex);
                     typeIndex++;
                     setTimeout(type, 70);
                 }
