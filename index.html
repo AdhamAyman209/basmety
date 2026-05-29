@@ -7,13 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* --- الألوان الزاهية الجديدة --- */
         :root {
-            --bg-color: #fff0f3; /* بينك فاتح جداً مريح للعين */
-            --primary-pink: #ff4d6d; /* بينك زاهي وحيوي */
-            --accent-red: #c9184a; /* أحمر رومانسي */
-            --card-grad: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%); /* تدرج ألوان قوي */
-            --text-dark: #590d22; /* لون خط غامق عشان يقرأ بسهولة */
+            --bg-color: #fff0f3; 
+            --primary-pink: #ff4d6d; 
+            --accent-red: #c9184a; 
+            --card-grad: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            --text-dark: #590d22; 
             --shadow: 0 10px 25px rgba(201, 24, 74, 0.15);
             --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
@@ -38,32 +37,35 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            /* صورة ورد أحمر وقلوب رومانسية عالية الجودة */
-            background: url('https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?q=80&w=1500&auto=format&fit=crop') center/cover no-repeat;
+            /* صورة ورد أحمر جديدة ومضمونة */
+            background: url('https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?q=80&w=1500&auto=format&fit=crop') center/cover no-repeat;
             z-index: 9999;
             display: flex;
             justify-content: center;
             align-items: center;
-            /* الورد في البداية ميت وضلمة */
-            filter: grayscale(100%) brightness(20%) sepia(30%) hue-rotate(-50deg);
+            /* التأثير الغامق الميت */
+            filter: grayscale(100%) brightness(20%) sepia(20%);
             transition: filter 3.5s ease-in-out, opacity 1s ease-in-out;
             padding: 20px;
         }
 
         #login-box {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.65);
             padding: 40px 30px;
             border-radius: 25px;
             backdrop-filter: blur(10px);
             text-align: center;
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.2);
             transition: opacity 1s ease;
             width: 100%;
-            max-width: 350px;
+            max-width: 380px;
+            min-height: 250px;
+            justify-content: center;
         }
 
         #login-box label {
@@ -108,20 +110,18 @@
             transition: width 3.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* --- زرار الدخول بعد ما الورد ينور --- */
         #enter-btn {
-            display: none;
-            padding: 15px 30px;
-            font-size: 1.5rem;
+            display: none; /* مخفي في البداية */
+            padding: 15px 40px;
+            font-size: 1.6rem;
             font-weight: 800;
             color: #fff;
             background: var(--card-grad);
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.4);
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.5);
             animation: pulse 1.5s infinite;
-            margin-top: 10px;
         }
 
         @keyframes pulse {
@@ -231,11 +231,6 @@
             font-weight: 800;
         }
 
-        .time-box small {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
         .chart-container {
             width: 100%;
             max-width: 450px;
@@ -310,7 +305,7 @@
 
         /* --- CTA Section --- */
         .cta-section {
-            min-height: 300px;
+            min-height: 350px;
             justify-content: center;
         }
 
@@ -321,18 +316,20 @@
             margin-bottom: 40px;
         }
 
+        /* حاوية الأزرار - ثابتة ولها أبعاد واضحة */
         .buttons-wrapper {
             position: relative;
             width: 100%;
-            max-width: 400px;
-            height: 150px; /* مساحة عشان الزرار يجري فيها براحته */
+            max-width: 500px;
+            height: 200px; 
             display: flex;
             justify-content: center;
             align-items: center;
+            gap: 20px;
         }
 
         .btn {
-            padding: 15px 40px;
+            padding: 15px 35px;
             font-size: 1.4rem;
             font-weight: 800;
             border: none;
@@ -342,6 +339,7 @@
             transition: transform 0.2s;
         }
 
+        /* زرار "مسامحاك" ثابت */
         .btn-yes {
             background: var(--card-grad);
             color: white;
@@ -352,11 +350,13 @@
             transform: scale(0.95);
         }
 
+        /* زرار "مش مسامحاك" */
         .btn-no {
             background-color: #e0e0e0;
             color: #555;
-            position: absolute;
-            transition: top 0.3s ease, left 0.3s ease; /* الحركة بقت سلسة وسريعة */
+            z-index: 5;
+            /* هيفضل ثابت لحد ما يشتغل عليه الجافاسكريبت */
+            transition: left 0.3s ease, top 0.3s ease; 
         }
 
         .heart {
@@ -376,26 +376,25 @@
             .hero-text { font-size: 1.8rem; }
             .flip-card { width: 100%; height: 200px; }
             .cta-text { font-size: 1.8rem; }
-            .buttons-wrapper { height: 200px; } /* مساحة أكبر في الموبايل لهروب الزرار */
+            .buttons-wrapper { height: 250px; flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Overlay / Hook -->
     <div id="overlay">
         <div id="login-box">
             <label id="pass-label" for="password-input">اكتبي بحبك يا بسمة</label>
             <input type="text" id="password-input" placeholder="اكتبي هنا..." autocomplete="off">
+            
             <div class="loading-bar-container" id="loading-box">
                 <div class="loading-progress" id="loading-progress"></div>
             </div>
-            <!-- زرار الدخول اللي هيظهر بعدين -->
+            
             <button id="enter-btn">بحبك يا بسمتي</button>
         </div>
     </div>
 
-    <!-- Main Content -->
     <div id="main-content">
         
         <section>
@@ -459,14 +458,13 @@
             <div class="cta-text">ها، أقدر أقول إننا اتصالحنا يا بسمة؟</div>
             <div class="buttons-wrapper">
                 <button class="btn btn-yes" id="btn-yes">أيوة، مسامحاك 🤍</button>
-                <button class="btn btn-no" id="btn-no" style="top: 50px; left: 50px;">لأ لسه زعلانة 😤</button>
+                <button class="btn btn-no" id="btn-no">لأ لسه زعلانة 😤</button>
             </div>
         </section>
 
     </div>
 
     <script>
-        // --- Logic for overlay and glowing flowers ---
         const passwordInput = document.getElementById('password-input');
         const passLabel = document.getElementById('pass-label');
         const overlay = document.getElementById('overlay');
@@ -481,23 +479,20 @@
                 this.disabled = true;
                 loadingBox.style.display = 'block';
 
-                // الورد ينور و يزهزه
                 setTimeout(() => {
                     loadingProgress.style.width = '100%';
-                    overlay.style.filter = "grayscale(0%) brightness(110%) contrast(110%) hue-rotate(0deg)";
+                    overlay.style.filter = "grayscale(0%) brightness(110%) sepia(0%)";
                 }, 50);
 
-                // بعد ما البار يكتمل (3.5 ثواني)، نخفي الـ Text box ونظهر زرار الدخول
                 setTimeout(() => {
-                    loadingBox.style.display = 'none';
                     passwordInput.style.display = 'none';
                     passLabel.style.display = 'none';
+                    loadingBox.style.display = 'none';
                     enterBtn.style.display = 'inline-block';
                 }, 3500);
             }
         });
 
-        // لما تدوس على زرار الدخول
         enterBtn.addEventListener('click', () => {
             loginBox.style.opacity = '0';
             setTimeout(() => {
@@ -511,7 +506,6 @@
             }, 500);
         });
 
-        // --- Intersection Observer ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -524,7 +518,6 @@
             observer.observe(item);
         });
 
-        // --- Countdown ---
         const targetDate = new Date('August 1, 2026 00:00:00').getTime();
         setInterval(() => {
             const now = new Date().getTime();
@@ -540,7 +533,6 @@
             document.getElementById('secs').innerText = seconds.toString().padStart(2, '0');
         }, 1000);
 
-        // --- Chart.js ---
         let chartRendered = false;
         function initChart() {
             if (chartRendered) return;
@@ -569,16 +561,26 @@
             });
         }
 
-        // --- Runaway Button ---
         const btnNo = document.getElementById('btn-no');
         const wrapper = document.querySelector('.buttons-wrapper');
-        
-        const moveBtn = () => {
-            const wrapperRect = wrapper.getBoundingClientRect();
-            const btnRect = btnNo.getBoundingClientRect();
+        let isAbsolute = false;
 
-            const maxX = wrapperRect.width - btnRect.width;
-            const maxY = wrapperRect.height - btnRect.height;
+        const moveBtn = () => {
+            if (!isAbsolute) {
+                const rect = btnNo.getBoundingClientRect();
+                const wrapperRect = wrapper.getBoundingClientRect();
+                btnNo.style.position = 'absolute';
+                btnNo.style.left = (rect.left - wrapperRect.left) + 'px';
+                btnNo.style.top = (rect.top - wrapperRect.top) + 'px';
+                isAbsolute = true;
+            }
+
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const btnWidth = btnNo.offsetWidth;
+            const btnHeight = btnNo.offsetHeight;
+
+            const maxX = wrapperRect.width - btnWidth;
+            const maxY = wrapperRect.height - btnHeight;
 
             const randomX = Math.max(0, Math.floor(Math.random() * maxX));
             const randomY = Math.max(0, Math.floor(Math.random() * maxY));
@@ -593,7 +595,6 @@
             moveBtn();
         });
 
-        // --- Yes Button ---
         document.getElementById('btn-yes').addEventListener('click', () => {
             for (let i = 0; i < 40; i++) {
                 setTimeout(() => {
