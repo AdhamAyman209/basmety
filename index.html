@@ -59,9 +59,14 @@
             background-image: url('https://images.pexels.com/photos/56866/rose-red-rose-romance-blossom-56866.jpeg');
             background-size: cover;
             background-position: center;
-            filter: grayscale(100%) brightness(25%) sepia(20%);
-            transition: filter 12s ease;
+            /* IMPORTANT: Start completely withered/dead */
+            filter: grayscale(100%) brightness(20%) sepia(30%) contrast(0.8);
+            transition: filter 15s ease-in-out;
             z-index: 1;
+        }
+
+        .overlay-bg.vibrant {
+            filter: grayscale(0%) brightness(100%) sepia(0%) contrast(1);
         }
 
         #overlay-hearts-bg {
@@ -79,17 +84,24 @@
             position: absolute;
             bottom: -60px;
             font-size: 24px;
-            opacity: 0.35;
-            filter: grayscale(100%) brightness(0.6);
-            transition: filter 12s ease, transform 12s ease, opacity 12s ease;
+            opacity: 0.3;
+            /* Start completely grayscale and dim */
+            filter: grayscale(100%) brightness(0.4) contrast(0.8);
+            transition: filter 15s ease-in-out, opacity 15s ease-in-out, transform 15s ease-in-out;
             animation: floatUp linear infinite;
             will-change: transform;
         }
 
+        .overlay-heart.vibrant {
+            filter: grayscale(0%) brightness(100%) contrast(1);
+            opacity: 0.6;
+            transform: scale(1.2);
+        }
+
         @keyframes floatUp {
             0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
-            10% { opacity: 0.35; }
-            90% { opacity: 0.35; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
             100% { transform: translateY(-110vh) rotate(360deg) scale(1.2); opacity: 0; }
         }
 
@@ -101,7 +113,7 @@
         }
 
         .glass-box {
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -139,7 +151,7 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        /* Heart Loading */
+        /* Heart Loading - 15 seconds */
         .loading-heart-container {
             display: none;
             margin-top: 25px;
@@ -148,37 +160,43 @@
             gap: 12px;
         }
 
+        .heart-wrapper {
+            position: relative;
+            display: inline-block;
+            font-size: 4rem;
+            line-height: 1;
+        }
+
         .loading-heart {
-            font-size: 3rem;
             filter: grayscale(100%) brightness(0.5);
-            transition: filter 12s ease, transform 12s ease;
+            transition: filter 15s ease-in-out, transform 15s ease-in-out;
             display: inline-block;
         }
 
-        .loading-heart-fill {
+        .loading-heart.vibrant {
+            filter: grayscale(0%) brightness(100%);
+            transform: scale(1.2);
+        }
+
+        .heart-fill-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 0%;
-            background: linear-gradient(to top, var(--deep-red), var(--soft-peach));
-            transition: height 12s linear;
+            background: linear-gradient(to top, rgba(192, 57, 43, 0.9), rgba(230, 176, 170, 0.7));
+            transition: height 15s linear;
             mix-blend-mode: color;
-            opacity: 0.9;
-            border-radius: 0 0 50% 50%;
-        }
-
-        .heart-wrapper {
-            position: relative;
-            display: inline-block;
-            overflow: hidden;
+            border-radius: 0 0 40% 40%;
+            pointer-events: none;
         }
 
         .loading-text {
             font-family: 'Amiri', serif;
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--soft-peach);
             opacity: 0.8;
+            transition: opacity 0.5s;
         }
 
         #enter-btn {
@@ -239,8 +257,8 @@
         .love-note {
             position: absolute;
             font-family: 'Amiri', serif;
-            font-size: 1rem;
-            color: rgba(230, 176, 170, 0.6);
+            font-size: 1.1rem;
+            color: rgba(230, 176, 170, 0.5);
             white-space: nowrap;
             animation: floatNote linear forwards;
             text-shadow: 0 0 10px rgba(192, 57, 43, 0.3);
@@ -248,8 +266,8 @@
 
         @keyframes floatNote {
             0% { transform: translateX(0) translateY(100vh) rotate(0deg); opacity: 0; }
-            15% { opacity: 0.7; }
-            85% { opacity: 0.7; }
+            15% { opacity: 0.6; }
+            85% { opacity: 0.6; }
             100% { transform: translateX(30px) translateY(-10vh) rotate(10deg); opacity: 0; }
         }
 
@@ -312,6 +330,7 @@
             margin: 0 auto 40px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
             min-height: 120px;
+            direction: rtl;
         }
 
         .hero-image-container {
@@ -386,6 +405,7 @@
             color: var(--deep-red);
             margin-top: 15px;
             opacity: 0.8;
+            transition: opacity 1s ease;
         }
 
         /* Timeline */
@@ -427,15 +447,23 @@
             overflow: hidden;
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
             transition: transform 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
+        /* Vignette effect */
         .timeline-img-wrapper::after {
             content: '';
             position: absolute;
             inset: 0;
-            box-shadow: inset 0 0 60px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 80px rgba(0,0,0,0.6);
             border-radius: 12px;
             pointer-events: none;
+            transition: box-shadow 0.5s ease;
+        }
+
+        .timeline-img-wrapper:hover::after {
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.3);
         }
 
         .timeline-img {
@@ -454,7 +482,7 @@
             left: 0;
             right: 0;
             background: linear-gradient(to top, rgba(44, 10, 21, 0.95), transparent);
-            padding: 30px 15px 15px;
+            padding: 40px 15px 15px;
             font-family: 'Amiri', serif;
             font-size: 1.1rem;
             color: var(--gold);
@@ -462,6 +490,7 @@
             opacity: 0;
             transition: opacity 0.5s ease;
             pointer-events: none;
+            z-index: 5;
         }
 
         .timeline-img-wrapper.show-secret .secret-message {
@@ -663,6 +692,7 @@
             .glass-box { padding: 30px 20px; }
             .chart-box { height: 300px; }
             .poetry-text { font-size: 1.15rem; }
+            .heart-wrapper { font-size: 3rem; }
         }
 
         @media (max-width: 480px) {
@@ -679,7 +709,7 @@
     <div id="love-notes-container"></div>
 
     <div id="overlay">
-        <div class="overlay-bg"></div>
+        <div class="overlay-bg" id="overlay-bg"></div>
         <div id="overlay-hearts-bg"></div>
         <div class="overlay-content">
             <div class="glass-box">
@@ -689,9 +719,9 @@
                 <div class="loading-heart-container" id="loading-container">
                     <div class="heart-wrapper">
                         <span class="loading-heart" id="loading-heart">🥀</span>
-                        <div class="loading-heart-fill" id="heart-fill"></div>
+                        <div class="heart-fill-overlay" id="heart-fill"></div>
                     </div>
-                    <span class="loading-text">قلبي بيستناكي...</span>
+                    <span class="loading-text" id="loading-text">قلبي بيستناكي...</span>
                 </div>
                 
                 <button id="enter-btn">بحبك يا بسمتي</button>
@@ -813,7 +843,7 @@
     </div>
 
     <script>
-        // Overlay Background Hearts
+        // Overlay Background Hearts - Start withered
         const overlayHeartsBg = document.getElementById('overlay-hearts-bg');
         const heartSymbols = ['❤️', '💖', '🌹', '💗', '💕'];
 
@@ -832,14 +862,15 @@
         for (let i = 0; i < 25; i++) createOverlayHeart();
         setInterval(createOverlayHeart, 2000);
 
-        // Overlay Logic — 12 seconds transition
+        // Overlay Logic - 15 seconds transition
         const magicInput = document.getElementById('magic-input');
         const loadingContainer = document.getElementById('loading-container');
         const loadingHeart = document.getElementById('loading-heart');
         const heartFill = document.getElementById('heart-fill');
+        const loadingText = document.getElementById('loading-text');
         const enterBtn = document.getElementById('enter-btn');
         const overlay = document.getElementById('overlay');
-        const overlayBg = document.querySelector('.overlay-bg');
+        const overlayBg = document.getElementById('overlay-bg');
 
         magicInput.addEventListener('input', function() {
             if (this.value === 'بحبك يا بسمة') {
@@ -847,28 +878,28 @@
                 loadingContainer.style.display = 'flex';
                 loadingHeart.innerText = '🌹';
                 
+                // Start the heart fill animation - 15 seconds
                 setTimeout(() => {
                     heartFill.style.height = '100%';
                 }, 100);
                 
-                // Background blooms slowly over 12 seconds
-                overlayBg.style.filter = 'grayscale(0%) brightness(100%) sepia(0%)';
+                // Start background color restoration - 15 seconds
+                overlayBg.classList.add('vibrant');
                 
-                // Floating hearts bloom slowly too
+                // Transform floating hearts to vibrant - 15 seconds
                 const hearts = document.querySelectorAll('.overlay-heart');
-                hearts.forEach(h => {
-                    h.style.filter = 'grayscale(0%) brightness(100%)';
-                    h.style.opacity = '0.7';
-                    h.style.transform = 'scale(1.3)';
-                });
+                hearts.forEach(h => h.classList.add('vibrant'));
+                
+                // Animate the loading heart to vibrant
+                loadingHeart.classList.add('vibrant');
 
-                // Show button after 13 seconds so she feels every moment
+                // Show button after 16 seconds
                 setTimeout(() => {
                     loadingContainer.style.display = 'none';
                     magicInput.style.display = 'none';
                     enterBtn.style.display = 'inline-block';
                     enterBtn.classList.add('fade-in');
-                }, 13000);
+                }, 16000);
             }
         });
 
@@ -887,7 +918,7 @@
             }, 1000);
         });
 
-        // Hearts Animation
+        // Hearts Animation (Main Site)
         function startHearts() {
             setInterval(() => createHeart(), 250);
         }
@@ -938,7 +969,7 @@
                 if (typeIndex < heroText.length) {
                     el.innerText += heroText.charAt(typeIndex);
                     typeIndex++;
-                    setTimeout(type, 60);
+                    setTimeout(type, 70);
                 }
             }
             type();
